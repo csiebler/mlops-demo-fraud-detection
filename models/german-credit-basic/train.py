@@ -23,7 +23,7 @@ def get_runtime_args():
 def main():
     args = get_runtime_args()
 
-    df = pd.read_csv(os.path.join(args.data_path, 'german_credit_data.csv'))
+    df = pd.read_csv(os.path.join(args.data_path, 'ntnu-testimon.csv'))
     clf = model_train(df)
 
     #copying model to "outputs" directory, this will automatically upload it to Azure ML
@@ -34,10 +34,15 @@ def main():
 def model_train(df):
     run = Run.get_context()
 
-    df.drop("Sno", axis=1, inplace=True)
+    df.drop("step", axis=1, inplace=True)
+    df.drop("isFlaggedFraud", axis=1, inplace=True)
 
-    y_raw = df['Risk']
-    X_raw = df.drop('Risk', axis=1)
+    # Dropping for demo reasons
+    df.drop("nameOrig", axis=1, inplace=True)
+    df.drop("nameDest", axis=1, inplace=True)
+
+    y_raw = df['isFraud']
+    X_raw = df.drop('isFraud', axis=1)
 
     categorical_features = X_raw.select_dtypes(include=['object']).columns
     numeric_features = X_raw.select_dtypes(include=['int64', 'float']).columns
@@ -63,14 +68,14 @@ def model_train(df):
     X_train, X_test, y_train, y_test = train_test_split(X_raw, encoded_y, test_size=0.20, stratify=encoded_y, random_state=42)
 
     # Create sklearn pipeline
-    lr_clf = Pipeline(steps=[('preprocessor', feature_engineering_pipeline),
+    clf = Pipeline(steps=[('preprocessor', feature_engineering_pipeline),
                              ('classifier', LogisticRegression(solver="lbfgs"))])
     # Train the model
-    lr_clf.fit(X_train, y_train)
+    clf.fit(X_train, y_train)
 
     # Capture metrics
-    train_acc = lr_clf.score(X_train, y_train)
-    test_acc = lr_clf.score(X_test, y_test)
+    train_acc = clf.score(X_train, y_train)
+    test_acc = clf.score(X_test, y_test)
     print("Training accuracy: %.3f" % train_acc)
     print("Testing accuracy: %.3f" % test_acc)
 
@@ -78,27 +83,27 @@ def model_train(df):
     run.log('Train accuracy', train_acc)
     run.log('Test accuracy', test_acc)
     
-    # Explain model
-    explainer = TabularExplainer(lr_clf.steps[-1][1],
-                                 initialization_examples=X_train, 
-                                 features=X_raw.columns, 
-                                 classes=["Good", "Bad"], 
-                                 transformations=feature_engineering_pipeline)
+    # # Explain model
+    # explainer = TabularExplainer(clf.steps[-1][1],
+    #                              initialization_examples=X_train, 
+    #                              features=X_raw.columns, 
+    #                              classes=["Good", "Bad"], 
+    #                              transformations=feature_engineering_pipeline)
 
-    # explain overall model predictions (global explanation)
-    global_explanation = explainer.explain_global(X_test)
+    # # explain overall model predictions (global explanation)
+    # global_explanation = explainer.explain_global(X_test)
 
-    # Sorted SHAP values
-    print('ranked global importance values: {}'.format(global_explanation.get_ranked_global_values()))
-    # Corresponding feature names
-    print('ranked global importance names: {}'.format(global_explanation.get_ranked_global_names()))
-    # Feature ranks (based on original order of features)
-    print('global importance rank: {}'.format(global_explanation.global_importance_rank))
+    # # Sorted SHAP values
+    # print('ranked global importance values: {}'.format(global_explanation.get_ranked_global_values()))
+    # # Corresponding feature names
+    # print('ranked global importance names: {}'.format(global_explanation.get_ranked_global_names()))
+    # # Feature ranks (based on original order of features)
+    # print('global importance rank: {}'.format(global_explanation.global_importance_rank))
       
-    client = ExplanationClient.from_run(run)
-    client.upload_model_explanation(global_explanation, comment='Global Explanation: All Features')
+    # client = ExplanationClient.from_run(run)
+    # client.upload_model_explanation(global_explanation, comment='Global Explanation: All Features')
 
-    return lr_clf
+    return clf
 
 if __name__ == "__main__":
     main()

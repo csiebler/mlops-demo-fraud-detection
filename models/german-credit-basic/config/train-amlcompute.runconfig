@@ -1,5 +1,5 @@
 script: train.py
-arguments: [--data_path, /data, --model_name, credit-prediction.pkl]
+arguments: [--data_path, /data, --model_name, aml-demo-model.pkl]
 target: cpu-cluster
 framework: Python
 nodeCount: 1
@@ -19,7 +19,7 @@ data:
     environmentVariableName: training_dataset
     dataLocation:
       dataset:
-        name: german_credit_file
+        name: ntnu-testimon_paysim1_file
         version: 1
     mechanism: download
     pathOnCompute: /data
