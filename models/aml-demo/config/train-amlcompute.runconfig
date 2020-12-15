@@ -1,6 +1,6 @@
 script: train.py
 arguments: [--data_path, /data, --model_name, aml-demo-model.pkl]
-target: cpu-cluster
+target: cpu-cluster2
 framework: Python
 nodeCount: 1
 environment:
