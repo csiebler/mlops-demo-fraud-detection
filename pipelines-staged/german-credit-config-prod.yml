@@ -7,20 +7,20 @@ variables:
   ml_workspace_rg: 'csamlfsi-rg'
 
   # Name of your Compute Cluster (needs to exist)
-  ml_compute_name: 'cpu-cluster'
+  ml_compute_name: 'cpu-cluster2'
 
   # Name of your experiment for training tracking
-  ml_experiment_name: 'german-credit-basic-prod-ci'
+  ml_experiment_name: 'aml-prod-ci'
 
   # Model name for registration and its path in the repo
-  ml_model_name: 'german-credit-basic-model-prod'
-  ml_model_path: 'models/german-credit-basic'
+  ml_model_name: 'aml-demo-model-prod'
+  ml_model_path: 'models/aml-demo'
 
   # Desired model output name
-  ml_model_filename: 'credit-prediction.pkl'
+  ml_model_filename: 'aml-demo-model.pkl'
 
   # AKS cluster to deploy to (needs to exist)
   ml_aks_cluster: 'aks-prod'
 
   # Model deployment name
-  ml_deployment_name: 'german-credit-deployment-prod'
+  ml_deployment_name: 'aml-demo-deployment-prod'

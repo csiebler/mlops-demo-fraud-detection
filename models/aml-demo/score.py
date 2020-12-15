@@ -9,15 +9,12 @@ from azureml.monitoring import ModelDataCollector
 
 # Automatically generate the swagger interface by providing an data example
 input_sample = [{
-    "Age": 20,
-    "Sex": "male",
-    "Job": 0,
-    "Housing": "own",
-    "Saving accounts": "little",
-    "Checking account": "little",
-    "Credit amount": 100,
-    "Duration": 48,
-    "Purpose": "radio/TV"
+    "type": "PAYMENT",
+    "amount": 9839.64,
+    "oldbalanceOrg": 170136.0,
+    "newbalanceOrig": 160296.36,
+    "oldbalanceDest": 0.0,
+    "newbalanceDest": 0.0,
   }]
 output_sample = [[0.7, 0.3]]
 
@@ -31,8 +28,8 @@ def init():
     # Setup Data Collection
     global inputs_dc
     global predictions_dc
-    inputs_dc = ModelDataCollector("best_model", designation="inputs", feature_names=["Age", "Sex", "Job", "Housing", "Saving accounts", "Checking account", "Credit amount", "Duration", "Purpose"])
-    predictions_dc = ModelDataCollector("best_model", designation="predictions", feature_names=["good", "bad"])
+    inputs_dc = ModelDataCollector("best_model", designation="inputs")
+    predictions_dc = ModelDataCollector("best_model", designation="predictions", feature_names=["not_fraud", "fraud"])
 
 @input_schema('data', StandardPythonParameterType(input_sample))
 @output_schema(StandardPythonParameterType(output_sample))
