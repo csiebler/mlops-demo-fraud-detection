@@ -24,6 +24,7 @@ def main():
     args = get_runtime_args()
 
     df = pd.read_csv(os.path.join(args.data_path, 'ntnu-testimon.csv'))
+    df = df.sample(1000*1000) # Just use a subset for sake of demo
     clf = model_train(df)
 
     #copying model to "outputs" directory, this will automatically upload it to Azure ML
@@ -69,7 +70,7 @@ def model_train(df):
 
     # Create sklearn pipeline
     clf = Pipeline(steps=[('preprocessor', feature_engineering_pipeline),
-                             ('classifier', LogisticRegression(solver="lbfgs"))])
+                             ('classifier', LogisticRegression(solver="saga", max_iter=500))])
     # Train the model
     clf.fit(X_train, y_train)
 
