@@ -1,5 +1,5 @@
 variables: 
- - template: german-credit-config.yml
+ - template: config.yml
 
 trigger: none
 

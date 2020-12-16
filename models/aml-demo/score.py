@@ -26,8 +26,10 @@ def init():
     model = joblib.load(model_path)
 
     # Setup Data Collection
-    global data_collector
-    data_collector = ModelDataCollector("best_model", designation="inputs")
+    global inputs_dc
+    global predictions_dc
+    inputs_dc = ModelDataCollector("best_model", designation="inputs")
+    predictions_dc = ModelDataCollector("best_model", designation="predictions", feature_names=["not_fraud", "fraud"])
 
 @input_schema('data', StandardPythonParameterType(input_sample))
 @output_schema(StandardPythonParameterType(output_sample))
@@ -39,8 +41,9 @@ def run(data):
         result = {"predict_proba": proba.tolist()}
         
         # Collect data
-        df_pred = pd.DataFrame(data=proba, columns=["not_fraud", "fraud"])
-        data_collector.collect(pd.concat([df, df_pred], axis=1))
+        correlations = inputs_dc.collect(df)
+        predictions_data = predictions_dc.add_correlations(proba, correlations)
+        predictions_dc.collect(predictions_data)
 
         return result
     except Exception as e:

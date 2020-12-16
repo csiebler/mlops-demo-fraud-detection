@@ -9,25 +9,25 @@ stages:
   jobs:
     - template: template-train-and-register.yml
       parameters:
-        variablesFile: german-credit-config-dev.yml
+        variablesFile: config-dev.yml
 
 - stage: DeployDev
   displayName: Deploy (Dev Stage)
   jobs:
     - template: template-deploy.yml
       parameters:
-        variablesFile: german-credit-config-dev.yml
+        variablesFile: config-dev.yml
 
 - stage: TrainProd
   displayName: Train (Prod Stage)
   jobs:
     - template: template-train-and-register.yml
       parameters:
-        variablesFile: german-credit-config-prod.yml
+        variablesFile: config-prod.yml
 
 - stage: DeployProd
   displayName: Deploy (Prod Stage)
   jobs:
     - template: template-deploy.yml
       parameters:
-        variablesFile: german-credit-config-prod.yml
+        variablesFile: config-prod.yml
