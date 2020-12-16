@@ -27,7 +27,7 @@ def init():
 
     # Setup Data Collection
     global data_collector
-    data_collector = ModelDataCollector("best_model", designation="inputs")
+    data_collector = ModelDataCollector("best_model", designation="data_collection")
 
 @input_schema('data', StandardPythonParameterType(input_sample))
 @output_schema(StandardPythonParameterType(output_sample))
@@ -40,7 +40,6 @@ def run(data):
         
         # Collect data
         df_pred = pd.DataFrame(data=proba, columns=["not_fraud", "fraud"])
-
         data_collector.collect(pd.concat([df, df_pred], axis=1))
 
         return result
