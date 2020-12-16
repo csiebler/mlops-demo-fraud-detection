@@ -83,25 +83,25 @@ def model_train(df):
     run.log('Train accuracy', train_acc)
     run.log('Test accuracy', test_acc)
     
-    # # Explain model
-    # explainer = TabularExplainer(clf.steps[-1][1],
-    #                              initialization_examples=X_train, 
-    #                              features=X_raw.columns, 
-    #                              classes=["Good", "Bad"], 
-    #                              transformations=feature_engineering_pipeline)
+    # Explain model
+    explainer = TabularExplainer(clf.steps[-1][1],
+                                 initialization_examples=X_train, 
+                                 features=X_raw.columns, 
+                                 classes=["NotFraud", "Fraud"], 
+                                 transformations=feature_engineering_pipeline)
 
-    # # explain overall model predictions (global explanation)
-    # global_explanation = explainer.explain_global(X_test)
+    # explain overall model predictions (global explanation)
+    global_explanation = explainer.explain_global(X_test)
 
-    # # Sorted SHAP values
-    # print('ranked global importance values: {}'.format(global_explanation.get_ranked_global_values()))
-    # # Corresponding feature names
-    # print('ranked global importance names: {}'.format(global_explanation.get_ranked_global_names()))
-    # # Feature ranks (based on original order of features)
-    # print('global importance rank: {}'.format(global_explanation.global_importance_rank))
+    # Sorted SHAP values
+    print('ranked global importance values: {}'.format(global_explanation.get_ranked_global_values()))
+    # Corresponding feature names
+    print('ranked global importance names: {}'.format(global_explanation.get_ranked_global_names()))
+    # Feature ranks (based on original order of features)
+    print('global importance rank: {}'.format(global_explanation.global_importance_rank))
       
-    # client = ExplanationClient.from_run(run)
-    # client.upload_model_explanation(global_explanation, comment='Global Explanation: All Features')
+    client = ExplanationClient.from_run(run)
+    client.upload_model_explanation(global_explanation, comment='Global Explanation: All Features')
 
     return clf
 
