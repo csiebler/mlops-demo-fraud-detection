@@ -70,7 +70,7 @@ def model_train(df):
 
     # Create sklearn pipeline
     clf = Pipeline(steps=[('preprocessor', feature_engineering_pipeline),
-                             ('classifier', LogisticRegression(solver="saga", max_iter=500))])
+                             ('classifier', LogisticRegression(solver="saga", max_iter=250))])
     # Train the model
     clf.fit(X_train, y_train)
 
