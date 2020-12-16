@@ -39,7 +39,9 @@ def run(data):
         result = {"predict_proba": proba.tolist()}
         
         # Collect data
-        data_collector.collect(pd.concat([df, proba], axis=1))
+        df_pred = pd.DataFrame(data=proba, columns=["not_fraud", "fraud"])
+
+        data_collector.collect(pd.concat([df, df_pred], axis=1))
 
         return result
     except Exception as e:
