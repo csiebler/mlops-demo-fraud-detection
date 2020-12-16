@@ -27,7 +27,7 @@ def init():
 
     # Setup Data Collection
     global data_collector
-    data_collector = ModelDataCollector("best_model", designation="data_collection")
+    data_collector = ModelDataCollector("best_model", designation="inputs")
 
 @input_schema('data', StandardPythonParameterType(input_sample))
 @output_schema(StandardPythonParameterType(output_sample))
